@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
-namespace TurnupPortal.StepDefinitions
+namespace TurnupPortal.Feature
 {
     [Binding]
     internal class TMTestDefinition : CommonDriver
@@ -25,7 +25,7 @@ namespace TurnupPortal.StepDefinitions
             LoginPage loginPageObj = new LoginPage();
             loginPageObj.LoginSteps(driver);
         }
-        
+
         [When(@"I navigate to Time and Material page")]
         public void WhenINavigateToTimeAndMaterialPage()
         {
@@ -50,7 +50,7 @@ namespace TurnupPortal.StepDefinitions
             //string newTypeCode = tmPageObj.GetNewTypeCode(driver);
             string newDescription = tmPageObj.GetNewDescription(driver);
             //string newPrice = tmPageObj.GetNewPrice(driver);
-            
+
             Assert.That(newCode == "Selenium Webdriver", "Actual code and expected code do not match.");
             //Assert.That(newTypeCode == "M", "Actual typecode and expected typecode do not match.");
             Assert.That(newDescription == "This is my first automated test project.", "Actual description and expected description do not match.");
@@ -72,21 +72,21 @@ namespace TurnupPortal.StepDefinitions
             string editedCode = tmPageObj.GetEditedCode(driver);
             string editedDescription = tmPageObj.GetEditedDescription(driver);
             string editedPrice = tmPageObj.GetEditedPrice(driver);
-            
+
             Assert.That(editedCode == p2, "Expected code and actual code do not match. Record hasn't been edited successfully.");
             Assert.That(editedDescription == p1,
                 "Expected description and actual description do not match. Record hasn't been edited successfully.");
-            Assert.That(editedPrice == (p3.ToString("C", CultureInfo.CurrentCulture)),"Expected price and actual price do not match. Record hasn't been edited successfully.");
+            Assert.That(editedPrice == p3.ToString("C", CultureInfo.CurrentCulture), "Expected price and actual price do not match. Record hasn't been edited successfully.");
             driver.Close();
         }
-        
+
         [When(@"I delete an extisting Time and Material record matching '(.*)' & '(.*)'")]
         public void WhenIDeleteAnExtistingTimeAndMaterialRecordMatching(string code, string description)
         {
             TMPage tmPageObj = new TMPage();
             tmPageObj.DeleteRecord(driver, code);
         }
-        
+
         [Then(@"The record matching '(.*)' & '(.*)' should be deleted successfully")]
         public void ThenTheRecordMatchingShouldBeDeletedSuccessfully(string p1, string p2)
         {
