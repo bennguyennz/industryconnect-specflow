@@ -8,14 +8,16 @@ namespace TurnupPortal.Pages
 {
 	public class TMPage
 	{
-        IWebElement TypeCodeListbox = driver.FindElement(By.XPath("//span[contains(text(),'Material')]"));
+        IWebElement TypeCodeListbox => driver.FindElement(By.XPath("//span[contains(text(),'Material')]"));
+        IWebElement createnewButton => driver.FindElement(By.XPath("//a[contains(text(),'Create New')]"));
+
         public void CreateRecord(IWebDriver driver)
 		{
             //Wait to load page
             WaitHelpers.WaitToBeClickable(driver, "XPath", "//a[contains(text(),'Create New')]", 5);
 
             //Click Create New button
-            IWebElement createnewButton = driver.FindElement(By.XPath("//a[contains(text(),'Create New')]"));
+
             createnewButton.Click();
 
             WaitHelpers.WaitToBeClickable(driver, "Id", "Code", 5);
