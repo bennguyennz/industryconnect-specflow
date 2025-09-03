@@ -8,25 +8,21 @@ on:
   workflow_dispatch:
     # Inputs the workflow accepts.
     inputs:
-      testExecKey:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'testExecKey'
-        # Default value if no value is explicitly provided
-        default: 'abc'
-        # Input has to be provided for the workflow to run
+      testPlanKey:
+        description: 'TestPlan key from Xray'
+        default: ''
         required: true
-        # The data type of the input
         type: string
       projectKey:
-        default: 'abc'
-        description: 'projectKey'
+        description: 'Project key from Xray'
+        default: ''
         required: true
         type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "greet"
-  greet:
+  build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -36,7 +32,16 @@ jobs:
     - name: Send greeting
       run: echo "Hello ${{ inputs.name }}"
     - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Process Jira data
-      run: echo "Jira issue key received:"
-             # Add your desired steps here
+      uses: actions/checkout@v2
+    - name: "Import results to Xray"
+      uses: mikepenz/xray-action@v2.4.5
+      with:
+         username: ${{ secrets.JIRA_USERNAME }}
+         password: ${{ secrets.JIRA_PASSWORD }}
+         xrayCloud: "false"
+         xrayBaseUrl: ${{ secrets.JIRA_BASEURL }}
+         testFormat: "junit"
+         testPaths: "**/xray-report.xml"
+         testPlanKey: "${{ inputs.testPlanKey }}"
+         projectKey: "${{ inputs.projectKey }}"
+         testEnvironments: "NODE_${{ matrix.node-version }}"
