@@ -12,13 +12,13 @@ on:
         # Friendly description to be shown in the UI instead of 'name'
         description: 'testExecKey'
         # Default value if no value is explicitly provided
-        default: ''
+        default: 'abc'
         # Input has to be provided for the workflow to run
         required: true
         # The data type of the input
         type: string
       projectKey:
-        default: ''
+        default: 'abc'
         description: 'projectKey'
         required: true
         type: string
