@@ -26,17 +26,32 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "greet"
-  greet:
+  build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Runs a single command using the runners shell
-    - name: Send greeting
-      run: echo "Hello ${{ inputs.name }}"
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v4
-    - name: Process Jira data
-      run: echo "Jira issue key received:"
+    # Runs a single command using the runners shell
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+          node-version: '18'
+
+    - name: Run Appium Tests
+      run: npm test -- --reporter junit > junit-report.xml
+      continue-on-error: true
+          
+    - name: Check for Junit report file
+      run: ls -la
+    - name: "Import results to Xray"
+      uses: mikepenz/xray-action@v2
+      with:
+          username: ${{ secrets.XRAY_CLIENT_ID }}
+          password: ${{ secrets.XRAY_CLIENT_SECRET }}
+          testFormat: "junit"
+          testPaths: "junit-report.xml"
+          testExecKey: ${{ github.event.inputs.test_execution_key }}
              # Add your desired steps here
