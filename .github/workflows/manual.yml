@@ -53,5 +53,5 @@ jobs:
           password: ${{ secrets.XRAY_CLIENT_SECRET }}
           testFormat: "junit"
           testPaths: "junit-report.xml"
-          testExecKey: ${{ github.event.inputs.test_execution_key }}
+          testExecKey: ${{ github.event.inputs.testExecKey }}
              # Add your desired steps here
