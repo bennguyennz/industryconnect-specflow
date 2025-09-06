@@ -1,0 +1,29 @@
+name: Xray Triggered Job
+
+on:
+  workflow_dispatch:
+    inputs:
+      testExecKey:
+        description: 'Xray Test Execution Key'
+        required: true
+        type: string
+
+jobs:
+  hello-world-and-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Hello World
+        run: echo "Hello World!"
+
+      - name: Generate JUnit XML report
+        run: |
+          echo '<?xml version="1.0" encoding="UTF-8"?><testsuites><testsuite name="Hello World Test" tests="1" failures="0" skipped="0" errors="0" time="1.0"><testcase name="Say Hello World" classname="HelloWorld"></testcase></testsuite></testsuites>' > junit-report.xml
+
+      - name: Import results to Xray
+        uses: mikepenz/xray-action@v2
+        with:
+          username: ${{ secrets.XRAY_CLIENT_ID }}
+          password: ${{ secrets.XRAY_CLIENT_SECRET }}
+          testFormat: "junit"
+          testPaths: "junit-report.xml"
+          testExecKey: ${{ github.event.inputs.testExecKey }}
