@@ -1,18 +1,8 @@
 name: Xray Triggered Job
 
 on:
-  workflow_dispatch:
-    inputs:
-      testExecKey:
-        description: 'Xray Test Execution Key'
-        default: ''
-        required: true
-        type: string
-      projectKey:
-        description: 'Project key from Xray'
-        default: ''
-        required: true
-        type: string
+  repository_dispatch:   # <-- this is the event Xray uses for Remote Jobs
+    types: [xray-test-execution]
 
 jobs:
   hello-world-and-report:
@@ -28,15 +18,25 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"client_id":"${{ secrets.XRAY_CLIENT_ID }}","client_secret":"${{ secrets.XRAY_CLIENT_SECRET }}"}' \
             https://xray.cloud.getxray.app/api/v2/authenticate | tr -d '"')
+          if [ -z "$TOKEN" ]; then
+            echo "❌ Failed to get Xray token"
+            exit 1
+          fi
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
 
       - name: Generate JUnit XML report
         run: |
-          echo '<?xml version="1.0" encoding="UTF-8"?><testsuites><testsuite name="Hello World Test" tests="1" failures="0" skipped="0" errors="0" time="1.0"><testcase name="Say Hello World" classname="HelloWorld"></testcase></testsuite></testsuites>' > junit-report.xml
+          echo '<?xml version="1.0" encoding="UTF-8"?>
+          <testsuites>
+            <testsuite name="Hello World Test" tests="1" failures="0" skipped="0" errors="0" time="1.0">
+              <testcase name="Say Hello World" classname="HelloWorld"/>
+            </testsuite>
+          </testsuites>' > junit-report.xml
 
       - name: Upload results to Xray Cloud
         run: |
-          curl -H "Content-Type: multipart/form-data" \
+          echo "🚀 Uploading to Xray Test Execution: ${{ github.event.client_payload.testExecKey }}"
+          curl -v -H "Content-Type: multipart/form-data" \
                -H "Authorization: Bearer ${{ steps.xray-auth.outputs.token }}" \
                -F "file=@junit-report.xml" \
-               "https://xray.cloud.getxray.app/api/v2/import/execution/junit?testExecKey=${{ github.event.inputs.testExecutionKey }}"
+               "https://xray.cloud.getxray.app/api/v2/import/execution/junit?testExecKey=${{ github.event.client_payload.testExecKey }}"
