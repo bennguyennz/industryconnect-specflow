@@ -1,8 +1,18 @@
 name: Xray Remote Job Example
 
 on:
-  repository_dispatch:
-    types: [xray-test-execution]
+  workflow_dispatch:
+    inputs:
+      testPlanKey:
+        description: 'TestPlan key from Xray'
+        default: ''
+        required: true
+        type: string
+      projectKey:
+        description: 'Project key from Xray'
+        default: ''
+        required: true
+        type: string
 
 jobs:
   hello-world-and-report:
