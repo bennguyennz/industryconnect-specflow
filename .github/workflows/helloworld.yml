@@ -5,6 +5,12 @@ on:
     inputs:
       testExecKey:
         description: 'Xray Test Execution Key'
+        default: ''
+        required: true
+        type: string
+      projectKey:
+        description: 'Project key from Xray'
+        default: ''
         required: true
         type: string
 
@@ -20,12 +26,15 @@ jobs:
           echo '<?xml version="1.0" encoding="UTF-8"?><testsuites><testsuite name="Hello World Test" tests="1" failures="0" skipped="0" errors="0" time="1.0"><testcase name="Say Hello World" classname="HelloWorld"></testcase></testsuite></testsuites>' > junit-report.xml
 
       - name: Import results to Xray
-        uses: mikepenz/xray-action@v2
+        uses: mikepenz/xray-action@v2.4.5
         with:
-          xrayCloud: false
-          #xrayUrl: "https://xray.cloud.getxray.app/api/v2/import/execution/junit"
+          xrayCloud: "false"
+          xrayUrl: "https://xray.cloud.getxray.app/api/v2/import/execution/junit"
           username: ${{ secrets.XRAY_CLIENT_ID }}
           password: ${{ secrets.XRAY_CLIENT_SECRET }}
           testFormat: "junit"
           testPaths: "junit-report.xml"
-          testExecKey: ${{ github.event.inputs.testExecKey }}
+          testExecKey: "${{ inputs.testExecKey }}"
+          testPlanKey: "${{ inputs.testPlanKey }}"
+          projectKey: "${{ inputs.projectKey }}"
+          testEnvironments: "NODE_${{ matrix.node-version }}"
