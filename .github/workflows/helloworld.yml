@@ -23,7 +23,7 @@ jobs:
         uses: mikepenz/xray-action@v2
         with:
           xrayCloud: true
-          xrayUrl: "https://xray.cloud.getxray.app/api/v2/import/execution/junit"
+          #xrayUrl: "https://xray.cloud.getxray.app/api/v2/import/execution/junit"
           username: ${{ secrets.XRAY_CLIENT_ID }}
           password: ${{ secrets.XRAY_CLIENT_SECRET }}
           testFormat: "junit"
