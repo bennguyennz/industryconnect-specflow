@@ -11,6 +11,10 @@ jobs:
       - name: Say Hello World
         run: echo "Hello World!"
 
+      - name: Print testExecKey
+        run: |
+          echo "Test Execution Key: ${{ github.event.client_payload.testExecKey }}"
+
       - name: Get Xray Auth Token
         id: xray-auth
         run: |
