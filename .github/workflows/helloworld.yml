@@ -21,20 +21,22 @@ jobs:
       - name: Say Hello World
         run: echo "Hello World!"
 
+      - name: Get Xray Auth Token
+        id: xray-auth
+        run: |
+          TOKEN=$(curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"client_id":"${{ secrets.XRAY_CLIENT_ID }}","client_secret":"${{ secrets.XRAY_CLIENT_SECRET }}"}' \
+            https://xray.cloud.getxray.app/api/v2/authenticate | tr -d '"')
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+
       - name: Generate JUnit XML report
         run: |
           echo '<?xml version="1.0" encoding="UTF-8"?><testsuites><testsuite name="Hello World Test" tests="1" failures="0" skipped="0" errors="0" time="1.0"><testcase name="Say Hello World" classname="HelloWorld"></testcase></testsuite></testsuites>' > junit-report.xml
 
-      - name: Import results to Xray
-        uses: mikepenz/xray-action@v2.4.5
-        with:
-          xrayCloud: "false"
-          xrayUrl: "https://xray.cloud.getxray.app/api/v2/import/execution/junit"
-          username: ${{ secrets.XRAY_CLIENT_ID }}
-          password: ${{ secrets.XRAY_CLIENT_SECRET }}
-          testFormat: "junit"
-          testPaths: "junit-report.xml"
-          testExecKey: "${{ inputs.testExecKey }}"
-          testPlanKey: "${{ inputs.testPlanKey }}"
-          projectKey: "${{ inputs.projectKey }}"
-          testEnvironments: "NODE_${{ matrix.node-version }}"
+      - name: Upload results to Xray Cloud
+        run: |
+          curl -H "Content-Type: multipart/form-data" \
+               -H "Authorization: Bearer ${{ steps.xray-auth.outputs.token }}" \
+               -F "file=@junit-report.xml" \
+               "https://xray.cloud.getxray.app/api/v2/import/execution/junit?testExecKey=${{ github.event.inputs.testExecutionKey }}"
