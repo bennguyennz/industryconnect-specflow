@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Print testExecKey
         run: echo "Test Execution Key:${{ github.event.inputs.testExecKey }}"
+        # Use github.event.inputs.* for workflow_dispatch.
+        # Use github.event.client_payload.* for repository_dispatch.
 
       - name: Say Hello World
         run: echo "Hello World!"
@@ -56,5 +58,6 @@ jobs:
           http_code=$(echo "$response" | tail -n1)
           if [ "$http_code" -ne 200 ]; then
             echo "❌ Failed to upload results to Xray. HTTP status: $http_code"
+            exit 1 #for upload failures.
           fi
             
