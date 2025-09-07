@@ -55,4 +55,6 @@ jobs:
             "https://xray.cloud.getxray.app/api/v2/import/execution/junit?testExecKey=${{ github.event.client_payload.testExecKey }}")
           http_code=$(echo "$response" | tail -n1)
           if [ "$http_code" -ne 200 ]; then
-            echo "❌ Failed to upload results to Xray. HTTP status:
+            echo "❌ Failed to upload results to Xray. HTTP status: $http_code"
+          fi
+            
