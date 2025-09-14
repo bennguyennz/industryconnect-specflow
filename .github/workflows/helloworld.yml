@@ -64,7 +64,7 @@ jobs:
          xrayCloud: "false"
          xrayBaseUrl:  https://xray.cloud.getxray.app/api/v2/authenticate
          testFormat: "junit"
-         testPaths: "**/xray-report.xml"
+         testPaths: "**/junit-report.xml"
          testPlanKey: "${{ inputs.testExecKey }}"
          projectKey: "${{ inputs.projectKey }}"
          #testEnvironments: "NODE_${{ matrix.node-version }}"
