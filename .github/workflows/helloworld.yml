@@ -56,15 +56,17 @@ jobs:
             </testsuite>
           </testsuites>' > junit-report.xml
 
-      - name: "Import results to Xray"
-        uses: mikepenz/xray-action@v2.4.5
-        with:
-         client_id: ${{ secrets.XRAY_CLIENT_ID }}
-         client_secret: ${{ secrets.XRAY_CLIENT_SECRET }}
-         xrayCloud: true
-         #xrayBaseUrl:  https://xray.cloud.getxray.app/api/v2
-         testFormat: junit
-         testPaths: junit-report.xml
-         testPlanKey: "${{ github.event.inputs.testExecKey }}"
-         projectKey: "${{ github.event.inputs.projectKey }}"
-         #testEnvironments: "NODE_${{ matrix.node-version }}"
+      - name: Import results to Xray Cloud
+        run: |
+          echo "🚀 Uploading to Xray Test Execution: ${{ github.event.inputs.testExecKey }}"
+          response_file=$(mktemp)
+          http_code=$(curl -s -o "$response_file" -w "%{http_code}" -H "Content-Type: multipart/form-data" \
+             -H "Authorization: Bearer ${{ steps.xray-auth.outputs.token }}" \
+             -F "file=@junit-report.xml" \
+             "https://xray.cloud.getxray.app/api/v2/import/execution/junit?testExecKey=${{ github.event.inputs.testExecKey }}")
+          if [ "$http_code" -ne 200 ]; then
+             echo "❌ Failed to upload results to Xray. HTTP status: $http_code"
+             echo "Response body:"
+             cat "$response_file"
+             exit 1
+          fi
