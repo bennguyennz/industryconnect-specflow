@@ -33,11 +33,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Output Inputs
         run: echo "${{ toJSON(github.event.inputs) }}"
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
 
       - name: Get Xray Auth Token
         id: xray-auth
