@@ -56,6 +56,12 @@ jobs:
             </testsuite>
           </testsuites>' > junit-report.xml
 
+      - name: Debug JUnit XML
+        run: |
+           echo "Listing and showing JUnit XML file:"
+           ls -l junit-report.xml
+           cat junit-report.xml
+
       - name: Import results to Xray Cloud
         run: |
           echo "🚀 Uploading to Xray Test Execution: ${{ github.event.inputs.testExecKey }}"
