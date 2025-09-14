@@ -28,7 +28,8 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - name: Print testExecKey
-        run: echo "Test Execution Key:${{ github.event.inputs.testExecKey }}"
+        id: xray-execKey
+        run: echo '${{ echo "testExecKey=${{ github.event.inputs.testExecKey }}" }}' >> $GITHUB_OUTPUT
         # Use github.event.inputs.* for workflow_dispatch.
         # Use github.event.client_payload.* for repository_dispatch.
 
@@ -74,7 +75,7 @@ jobs:
           http_code=$(curl -s -o "$response_file" -w "%{http_code}" -H "Content-Type: multipart/form-data" \
             -H "Authorization: Bearer ${{ steps.xray-auth.outputs.token }}" \
             -F "file=@report.xml" \
-            "https://xray.cloud.getxray.app/api/v2/import/execution/junit?testExecKey=${{ github.event.inputs.testExecKey }}")
+            "https://xray.cloud.getxray.app/api/v2/import/execution/junit?testExecKey=${{ steps.xray-execKey.outputs.testExecKey }}")
           if [ "$http_code" -ne 200 ]; then
             echo "❌ Failed to upload results to Xray. HTTP status: $http_code"
             echo "Response body:"
