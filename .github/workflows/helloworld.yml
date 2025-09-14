@@ -17,6 +17,10 @@ on:
 jobs:
   hello-world-and-report:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [15.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - name: Print testExecKey
         run: echo "Test Execution Key:${{ github.event.inputs.testExecKey }}"
@@ -25,6 +29,15 @@ jobs:
 
       - name: Say Hello World
         run: echo "Hello World!"
+
+      - uses: actions/checkout@v2
+      - name: Output Inputs
+        run: echo "${{ toJSON(github.event.inputs) }}"
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Get Xray Auth Token
         id: xray-auth
