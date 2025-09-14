@@ -48,6 +48,19 @@ jobs:
             </testsuite>
           </testsuites>' > junit-report.xml
 
+      - name: "Import results to Xray"
+        uses: mikepenz/xray-action@v2.4.5
+        with:
+         username: ${{ secrets.XRAY_CLIENT_ID }}
+         password: ${{ secrets.XRAY_CLIENT_SECRET }}
+         xrayCloud: "false"
+         xrayBaseUrl:  https://xray.cloud.getxray.app/api/v2/authenticate
+         testFormat: "junit"
+         testPaths: "**/xray-report.xml"
+         testPlanKey: "${{ inputs.testExecKey }}"
+         projectKey: "${{ inputs.projectKey }}"
+         testEnvironments: "NODE_${{ matrix.node-version }}"
+
       - name: Upload results to Xray Cloud
         run: |
           echo "🚀 Uploading to Xray Test Execution: ${{ github.event.inputs.testExecKey }}"
