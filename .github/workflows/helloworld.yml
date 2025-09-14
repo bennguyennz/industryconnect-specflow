@@ -1,10 +1,6 @@
 name: Xray Remote Job Example
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
     
   workflow_dispatch:
     inputs:
@@ -29,7 +25,7 @@ jobs:
     steps:
       - name: Print testExecKey
         id: xray-execKey
-        run: echo '${{ echo "testExecKey=${{ github.event.inputs.testExecKey }}" }}' >> $GITHUB_OUTPUT
+        run: echo "${{ echo "testExecKey=${{ github.event.inputs.testExecKey }}" }}" >> $GITHUB_OUTPUT
         # Use github.event.inputs.* for workflow_dispatch.
         # Use github.event.client_payload.* for repository_dispatch.
 
