@@ -61,10 +61,10 @@ jobs:
         with:
          username: ${{ secrets.XRAY_CLIENT_ID }}
          password: ${{ secrets.XRAY_CLIENT_SECRET }}
-         xrayCloud: "false"
-         xrayBaseUrl:  https://xray.cloud.getxray.app/api/v2/authenticate
+         xrayCloud: "true"
+         #xrayBaseUrl:  https://xray.cloud.getxray.app/api/v2
          testFormat: "junit"
-         testPaths: "**/junit-report.xml"
-         testPlanKey: "${{ inputs.testExecKey }}"
-         projectKey: "${{ inputs.projectKey }}"
+         testPaths: "junit-report.xml"
+         testPlanKey: "${{ github.event.inputs.testExecKey }}"
+         projectKey: "${{ github.event.inputs.projectKey }}"
          #testEnvironments: "NODE_${{ matrix.node-version }}"
