@@ -73,7 +73,7 @@ jobs:
          username: ${{ secrets.JIRA_USERNAME }}
          password: ${{ secrets.JIRA_PASSWORD }}
          xrayCloud: false
-         xrayBaseUrl: https://xray.cloud.getxray.app/api/v2/import/execution/junit?testExecKey=${{ github.event.client_payload.testExecKey }}
+         xrayBaseUrl: https://xray.cloud.getxray.app/api/v2/import/execution/junit?testExecKey=${{ github.event.inputs.testExecKey }}
          testFormat: "junit"
          testPaths: "report.xml"
          testExecKey: "${{ inputs.testExecKey }}"
