@@ -54,7 +54,7 @@ jobs:
           echo '<?xml version="1.0" encoding="UTF-8"?>
           <testsuites>
             <testsuite name="Test suite" tests="1" failures="0" skipped="0" errors="0" time="1.0">
-              <testcase name="Test case" classname="DummyClass"/>
+              <testcase classname="Test" name="TestCase01"/>
             </testsuite>
           </testsuites>' > report.xml
 
