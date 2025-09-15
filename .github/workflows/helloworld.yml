@@ -53,8 +53,8 @@ jobs:
         run: |
           echo '<?xml version="1.0" encoding="UTF-8"?>
           <testsuites>
-            <testsuite name="Test suite" tests="1" failures="0" skipped="0" errors="0" time="1.0">
-              <testcase classname="Test" name="TestCase01"/>
+            <testsuite name="Testsuite" tests="1" failures="0" skipped="0" errors="0" time="1.0">
+              <testcase classname="someclassname" name="Test1"/>
             </testsuite>
           </testsuites>' > report.xml
 
